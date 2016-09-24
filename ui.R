@@ -1,25 +1,32 @@
 library(shiny)
-
-shinyUI(
-  pageWithSidebar(
-    headerPanel("Iris Species Prediction"),  
-    
-    sidebarPanel(
-      p(strong("Documentation:",style="color:red"), a("User Help Page",href="https://lmcmahan.shinyapps.io/project/userHelpPage.html")),    
-      h3('User Input'),
-      numericInput('id1', strong('Sepal.Length (cm)'), 5.1, min = 4.3, max = 7.9, step = 0.1),
-      numericInput('id2', strong('Sepal.Width (cm)'), 3.5, min = 2, max = 4.4, step = 0.1),
-      numericInput('id3', strong('Petal.Length (cm)'), 1.4, min = 1, max = 6.9, step = 0.1),
-      numericInput('id4', strong('Petal.Width (cm)'), 0.2, min = 0.1, max = 2.5, step = 0.1),
-      submitButton('Submit')
-    ),
-    mainPanel(
-        h3('Prediction Output'),
-        h4('Predicted species'),
-        verbatimTextOutput("irisSpeciesPrediction"),
-        h4('Predicted species based on this modeled classification tree:'),
-        plotOutput('tree')
-    )
-  )
+library(dplyr)
+library(markdown)
+shinyUI(navbarPage("Best car selection", tabPanel("Table",
+                                                  
+                                                  
+         # Sidebar
+          sidebarLayout(
+                  sidebarPanel(
+                          helpText("Provide information about your trip and the characteristics of the car that you look for"),
+                          numericInput('dis', 'Distance (in miles):', 50, min = 1, max = 1000),
+                          numericInput('cost', 'Gasoline Price (per gallon):', 2.41, min = 2, max = 4, step=0.01),
+                          numericInput('gas', 'Maximum expenditure on gasoline:', 50, min=1, max=1000),
+                          checkboxGroupInput('cyl', 'Number of cylinders:', c("Four"=4, "Six"=6, "Eight"=8), selected = c(4,6,8)),
+                          sliderInput('disp', 'Displacement', min=70, max=480, value=c(70,480), step=10),
+                          sliderInput('hp', 'Gross horsepower', min=50, max=340, value=c(50,340), step=10),
+                          checkboxGroupInput('am', 'Transmission:', c("Automatic"=0, "Manual"=1), selected = c(0,1))
+                  ),
+                  
+                  
+                  mainPanel(
+                          dataTableOutput('table')
+                  )
+          )
+),
+                tabPanel("About",
+                         mainPanel(
+                                 includeMarkdown("about.md")
+                         )
+                )
 )
-
+)   
